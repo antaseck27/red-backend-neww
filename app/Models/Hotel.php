@@ -10,10 +10,22 @@ class Hotel extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'address',
-        'price_per_night',
-        'currency',
-        'image',
-    ];
+    'name',
+    'address',
+    'email',
+    'phone',
+    'price_per_night',
+    'currency',
+    'image',
+];
+
+
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image
+        ? Storage::disk('public')->url($this->image)
+        : null;
+    }
 }

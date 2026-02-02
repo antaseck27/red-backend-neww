@@ -6,26 +6,31 @@ use App\Http\Controllers\HotelController;
 
 /*
 |--------------------------------------------------------------------------
-| AUTHENTIFICATION (PUBLIC)
+| API Routes
 |--------------------------------------------------------------------------
 */
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
 
-/*
-|--------------------------------------------------------------------------
-| HÔTELS (PUBLIC)
-|--------------------------------------------------------------------------
-*/
-Route::get('hotels', [HotelController::class, 'index']);
+/* ===========================
+|  AUTH – PUBLIC
+|===========================*/
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-/*
-|--------------------------------------------------------------------------
-| ROUTES PROTÉGÉES (JWT)
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth:api')->group(function () { 
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('me', [AuthController::class, 'me']);
-    Route::post('hotels', [HotelController::class, 'store']);
+/* ===========================
+|  HOTELS – PUBLIC (LECTURE)
+|===========================*/
+Route::get('/hotels', [HotelController::class, 'index']);
+Route::get('/hotels/{hotel}', [HotelController::class, 'show']);
+
+/* ===========================
+|  ROUTES PROTÉGÉES (JWT)
+|===========================*/
+Route::middleware('auth:api')->group(function () {
+
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::post('/hotels', [HotelController::class, 'store']);
+    Route::put('/hotels/{hotel}', [HotelController::class, 'update']);
+    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy']);
 });

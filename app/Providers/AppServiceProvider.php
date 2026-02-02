@@ -14,7 +14,6 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Ici tu peux enregistrer des services, bindings ou singletons si besoin
-        // ex: $this->app->bind(SomeInterface::class, SomeImplementation::class);
     }
 
     /**
@@ -22,10 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Optionnel : fixer une longueur par défaut pour les champs string pour PostgreSQL/MySQL
+        // Longueur par défaut pour les string
         Schema::defaultStringLength(191);
 
-        // Exemple : réponse JSON par défaut pour toutes les réponses
+        // Macro pour réponses JSON standardisées
         Response::macro('api', function ($data = [], $status = 200, $message = 'success') {
             return response()->json([
                 'status' => $status < 300 ? 'success' : 'error',
@@ -33,5 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 'data' => $data,
             ], $status);
         });
+
+       
     }
 }
