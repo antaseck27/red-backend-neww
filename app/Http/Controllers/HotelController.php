@@ -14,25 +14,22 @@ class HotelController extends Controller
     public function index()
     {
         $hotels = Hotel::all()->map(function ($hotel) {
-            if ($hotel->image) {
-                $hotel->image = asset('storage/' . $hotel->image);
-            }
-            return $hotel;
+            return [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+                'address' => $hotel->address,
+                'price_per_night' => $hotel->price_per_night,
+                'currency' => $hotel->currency,
+                'image' => $hotel->image,
+                'image_url' => $hotel->image
+                    ? asset('storage/' . $hotel->image)
+                    : null,
+                'created_at' => $hotel->created_at,
+                'updated_at' => $hotel->updated_at,
+            ];
         });
 
         return response()->json($hotels);
-    }
-
-    /* ===========================
-    |  AFFICHER UN HÔTEL
-    |===========================*/
-    public function show(Hotel $hotel)
-    {
-        if ($hotel->image) {
-            $hotel->image = asset('storage/' . $hotel->image);
-        }
-
-        return response()->json($hotel);
     }
 
     /* ===========================
@@ -49,51 +46,26 @@ class HotelController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('hotels', 'public');
+            $validated['image'] = $request
+                ->file('image')
+                ->store('hotels', 'public');
         }
 
         $hotel = Hotel::create($validated);
 
-        return response()->json($hotel, 201);
-    }
-
-    /* ===========================
-    |  MODIFIER UN HÔTEL
-    |===========================*/
-    public function update(Request $request, Hotel $hotel)
-    {
-        $validated = $request->validate([
-            'name' => 'sometimes|string',
-            'address' => 'sometimes|string',
-            'price_per_night' => 'sometimes|numeric',
-            'currency' => 'sometimes|string|max:3',
-            'image' => 'nullable|image|max:2048',
-        ]);
-
-        if ($request->hasFile('image')) {
-            if ($hotel->image) {
-                Storage::disk('public')->delete($hotel->image);
-            }
-
-            $validated['image'] = $request->file('image')->store('hotels', 'public');
-        }
-
-        $hotel->update($validated);
-
-        return response()->json($hotel);
-    }
-
-    /* ===========================
-    |  SUPPRIMER UN HÔTEL
-    |===========================*/
-    public function destroy(Hotel $hotel)
-    {
-        if ($hotel->image) {
-            Storage::disk('public')->delete($hotel->image);
-        }
-
-        $hotel->delete();
-
-        return response()->json(['message' => 'Hôtel supprimé']);
+        return response()->json([
+            'message' => 'Hôtel créé avec succès',
+            'hotel' => [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+                'address' => $hotel->address,
+                'price_per_night' => $hotel->price_per_night,
+                'currency' => $hotel->currency,
+                'image' => $hotel->image,
+                'image_url' => $hotel->image
+                    ? asset('storage/' . $hotel->image)
+                    : null,
+            ],
+        ], 201);
     }
 }
