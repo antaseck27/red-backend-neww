@@ -2,57 +2,35 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Chemins autorisés pour CORS
-    |--------------------------------------------------------------------------
-    */
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Origines autorisées
-    |--------------------------------------------------------------------------
-    */
-    'allowed_origins' => [
-        'http://localhost:5174', // dev local vite
-        'http://127.0.0.1:5174',
-        'https://frontend-red-prod-full.vercel.app', // frontend prod
+    'paths' => [
+        'api/*',
+        'sanctum/csrf-cookie',
+        'register',
+        'login',
+        'logout'
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Autoriser les cookies / credentials
-    |--------------------------------------------------------------------------
-    */
-    'allowed_credentials' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Méthodes HTTP autorisées
-    |--------------------------------------------------------------------------
-    */
     'allowed_methods' => ['*'],
 
-    /*
-    |--------------------------------------------------------------------------
-    | En-têtes autorisés
-    |--------------------------------------------------------------------------
-    */
+    'allowed_origins' => [
+        'http://localhost:5174',
+        'http://127.0.0.1:5174',
+
+        // FRONTEND VERCEL (⚠️ très important)
+        'https://frontend-red-prod-full.vercel.app',
+        'https://frontend-red-prod-full-4jgsaany0-antas-projects-04ba10c1.vercel.app',
+        'https://frontend-red-prod-full-4jgsaany0-antas-projects-04ba10c1.vercel.app'
+    ],
+
+    'allowed_origins_patterns' => [
+        '^https://.*\.vercel\.app$'
+    ],
+
     'allowed_headers' => ['*'],
 
-    /*
-    |--------------------------------------------------------------------------
-    | En-têtes exposés (optionnel)
-    |--------------------------------------------------------------------------
-    */
     'exposed_headers' => [],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Cache pré-vol CORS
-    |--------------------------------------------------------------------------
-    */
-    'max_age' => 0,
+    'supports_credentials' => true,
 
+    'max_age' => 0,
 ];
