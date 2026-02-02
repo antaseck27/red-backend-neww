@@ -47,15 +47,15 @@ class AuthController extends Controller
         // Tentative d'authentification avec les identifiants
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Identifiants invalides'], 401);
+                return response()->json(['error' => 'L\'email ou le mot de passe est incorrect.'], 401);
             }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
 
-        // Si la connexion réussit, retourner le token et les informations utilisateur
+        // Retourner le token et les informations utilisateur
         return response()->json([
-            'user' => auth()->user(),
+            'user' => JWTAuth::user(),
             'token' => $token
         ]);
     }
@@ -63,16 +63,22 @@ class AuthController extends Controller
     // Déconnexion
     public function logout()
     {
-        // Invalider le token JWT
-        JWTAuth::invalidate(JWTAuth::getToken());
+        $token = JWTAuth::getToken();
+        if ($token) {
+            JWTAuth::invalidate($token);
+            return response()->json(['message' => 'Déconnecté avec succès']);
+        }
 
-        return response()->json(['message' => 'Déconnecté avec succès']);
+        return response()->json(['error' => 'Aucun token trouvé'], 400);
     }
 
     // Informations utilisateur connecté
     public function me()
     {
-        // Retourner les informations de l'utilisateur authentifié
-        return response()->json(auth()->user());
+        return response()->json([
+            'id' => auth()->user()->id,
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+        ]);
     }
 }
