@@ -19,7 +19,6 @@ return [
         // FRONTEND VERCEL (⚠️ très important)
         'https://frontend-red-prod-full.vercel.app',
         'https://frontend-red-prod-full-4jgsaany0-antas-projects-04ba10c1.vercel.app',
-        'https://frontend-red-prod-full-4jgsaany0-antas-projects-04ba10c1.vercel.app'
     ],
 
     'allowed_origins_patterns' => [
